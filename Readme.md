@@ -147,6 +147,7 @@ WantedBy=multi-user.target
 
 
 ```ini
+sudo tee /etc/systemd/system/iotsensor.service > /dev/null <<'EOF'
 [Unit]
 Description=IoT Sensor HLK-LD2410B Publisher
 After=network-online.target
@@ -163,6 +164,7 @@ Environment=DOTNET_ENVIRONMENT=Production
 
 [Install]
 WantedBy=multi-user.target
+EOF
 ```
 
 
