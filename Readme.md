@@ -4,3 +4,54 @@
 
 
 https://mpsh6s3p-5122.asse.devtunnels.ms/
+
+
+Iya, service-nya cukup ini aja:
+
+[Unit]
+Description=IoT Sensor HLK-LD2410B Publisher
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+WorkingDirectory=/opt/iotsensor
+ExecStart=/usr/bin/dotnet /opt/iotsensor/IotSensor.dll
+Restart=always
+RestartSec=5
+User=pi
+Group=pi
+Environment=DOTNET_ENVIRONMENT=Production
+
+[Install]
+WantedBy=multi-user.target
+Simpan di Raspberry Pi:
+
+sudo nano /etc/systemd/system/iotsensor.service
+Terus:
+
+sudo systemctl daemon-reload
+sudo systemctl enable iotsensor
+sudo systemctl start iotsensor
+sudo systemctl status iotsensor
+Soal sensorMessage: iya, ke-send lewat MQTT payload, tapi log yang kamu paste itu belum nampilin sensorMessage.
+
+Log kamu sekarang cuma ini:
+
+Payload received: Occupied=True, Moving=46, Stationary=73
+Itu hanya log ringkas dari SensorRuntimeService, bukan isi JSON MQTT lengkap.
+
+Payload MQTT yang sebenarnya harusnya berisi juga:
+
+{
+  "isOccupied": true,
+  "movingTargetDistance": 46,
+  "stationaryTargetDistance": 73,
+  "isSensorConnected": true,
+  "sensorMessage": "Sensor connected and receiving valid data"
+}
+Cara demo-in supaya kelihatan sensorMessage:
+
+mosquitto_sub -h 10.150.1.29 -t sensor/data
+Kalau mau cantik:
+
+mosquitto_sub -h 10.150.1.29 -t sensor/data | jq
