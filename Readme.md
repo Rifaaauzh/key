@@ -146,6 +146,27 @@ WantedBy=multi-user.target
 
 
 
+```ini
+[Unit]
+Description=IoT Sensor HLK-LD2410B Publisher
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+WorkingDirectory=/opt/iotsensor
+ExecStart=/usr/bin/dotnet /opt/iotsensor/IotSensor.dll
+Restart=always
+RestartSec=5
+User=meetingroom
+Group=meetingroom
+Environment=DOTNET_ENVIRONMENT=Production
+
+[Install]
+WantedBy=multi-user.target
+```
+
+
+
 
 
 8:58
